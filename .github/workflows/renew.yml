@@ -2,8 +2,8 @@ name: Pella Auto Renew
 
 on:
   schedule:
-    # 每天的 UTC 时间 00:15 和 12:15 运行 (对应北京时间 08:15 和 20:15)
-    - cron: '15 21 * * *'
+    # 每3小时运行一次
+    - cron: '0 */3 * * *'
   # 允许手动在 Actions 页面点击运行按钮
   workflow_dispatch:
 

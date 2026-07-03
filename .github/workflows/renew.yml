@@ -1,29 +1,29 @@
-name: PellaFree 自动续期
+name: Pella Auto Renew
 
 on:
-  workflow_dispatch:
-  repository_dispatch:
-    types: [pella-renew-alert]
   schedule:
-    - cron: '0 8 * * *' # 每天 UTC 08:00（达拉斯时间 03:00）运行
+    - cron: '15 */12 * * *'
+  # 允许手动在 Actions 页面点击运行按钮
+  workflow_dispatch:
 
 jobs:
   renew:
     runs-on: ubuntu-latest
-
     steps:
-      - name: 检出仓库代码
+      - name: 📥 拉取私库代码
         uses: actions/checkout@v4
-
-      - name: 设置 Node.js 环境
+        with:
+          repository: ${{ github.repository_owner }}/pla-renew-private
+          token: ${{ secrets.PRIVATE_REPO_TOKEN }}
+      
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20' # Node 20 原生支持 fetch
 
-      - name: 执行 PellaFree 续期脚本
+      - name: Run Script
         env:
           ACCOUNT: ${{ secrets.ACCOUNT }}
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
-        run: |
-          node pella-free-renew.js
+        run: node index.js
